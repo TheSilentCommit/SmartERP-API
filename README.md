@@ -27,6 +27,7 @@ finance, and sales.
 
 ## Project Structure
 
+```text
 src/
 ├── controllers/
 ├── models/
