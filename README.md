@@ -34,5 +34,4 @@ src/
 ├── routes/
 ├── middlewares/
 ├── config/
-├── utils/
 └── app.js
