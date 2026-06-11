@@ -16,7 +16,7 @@ userRouter.get('/:id', getUser);
 
 // OK
 // api/v1/users
-userRouter.post('/', validateFields(['name', 'email', 'password', 'admin']), signUp);
+userRouter.post('/', validateFields(['name', 'email', 'password']), signUp);
 
 // api/v1/users/:id
 userRouter.put('/:id', (req, res) => {});
