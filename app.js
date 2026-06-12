@@ -4,6 +4,7 @@ import { NODE_ENV, PORT } from './config/env.js';
 import userRouter from './routes/user.routes.js';
 import connectToDatabase from './database/mongodb.js';
 import authRouter from './routes/auth.routes.js';
+import { errorMiddleware } from './middlewares/error.middlewares.js';
 
 const app = express();
 
@@ -13,6 +14,9 @@ app.use(express.json());
 // Routes
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auth', authRouter);
+
+// Error Middleware
+app.use(errorMiddleware);
 
 // Homepage
 app.get('/', (req, res) => {
