@@ -1,27 +1,22 @@
 import { Router } from "express";
 
-import { getUser, getUsers, putUser } from "../controllers/user.controllers.js";
-import { signUp } from "../controllers/auth.controller.js";
-import { validateFields } from "../middlewares/validate.middlewares.js";
+import { getUser, getUsers, updateUser } from "../controllers/user.controllers.js";
+import { authorizeAdminOrOwner, authorizeGeneral } from "../middlewares/auth.middlewares.js";
 
 const userRouter = Router();
 
 // OK
 // api/v1/users
-userRouter.get('/', getUsers);
+userRouter.get('/', authorizeGeneral, getUsers);
 
 // OK
 // api/v1/users/:id
-userRouter.get('/:id', getUser);
-
-// OK
-// api/v1/users
-userRouter.post('/', validateFields(['name', 'email', 'password']), signUp);
+userRouter.get('/:id', authorizeGeneral, getUser);
 
 // api/v1/users/:id
-userRouter.put('/:id', putUser);
+userRouter.put('/:id', authorizeGeneral, authorizeAdminOrOwner, updateUser);
 
 // api/v1/users/:id
-userRouter.delete('/:id', (req, res) => {});
+// userRouter.delete('/:id', (req, res) => {});
 
 export default userRouter;

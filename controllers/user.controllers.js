@@ -32,7 +32,7 @@ export const getUser = async (req, res, next) => {
     }
 };
 
-export const putUser = async (req, res, next) => {
+export const updateUser = async (req, res, next) => {
     try {
         const { id } = req.params;
 
