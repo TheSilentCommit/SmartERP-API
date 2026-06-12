@@ -1,15 +1,13 @@
 import User from "../models/user.models.js";
+import { sendSuccess, sendError } from "../utils/responses.utils.js";
 
 export const getUsers = async (req, res, next) => {
     try {
         const users = await User.find();
 
-        res.status(200).json({
-            success: true,
-            data: users
-        });
+        return sendSuccess(res, 200, 'OK', users);
     } catch (error) {
-        next(error);
+        return next(error);
     }
 };
 
@@ -18,17 +16,12 @@ export const getUser = async (req, res, next) => {
         const user = await User.findById(req.params.id);
 
         if(!user){
-            const error = new Error('User not found');
-            error.statusCode = 404;
-            throw error;
+            sendError(404, 'User not found');
         }
 
-        res.status(200).json({
-            success: true,
-            data: user
-        })
+        return sendSuccess(res, 200, 'OK', user);
     } catch (error) {
-        next(error);
+        return next(error);
     }
 };
 
@@ -47,27 +40,33 @@ export const updateUser = async (req, res, next) => {
         }
 
         if(Object.keys(updateData).length === 0){
-            const error = new Error('No valid field for update provided');
-            error.statusCode = 400;
-            throw error;
+            sendError(400, 'No valid field for update provided');
         }
 
         const user = await User.findByIdAndUpdate(id, updateData, {returnDocument: 'after', runValidators: true});
 
         if(!user){
-            const error = new Error('User not found');
-            error.statusCode = 404;
-            throw error;
+            sendError(404, 'User not found');
         }
 
-        res.status(200).json({
-            success: true,
-            message: 'User updated successfully',
-            data: {
-                user
-            }
-        })
+        return sendSuccess(res, 200, 'User updated successfully', user);
     } catch (error) {
-        next(error);
+        return next(error);
     }
-}
+};
+
+export const deleteUser = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        const user = await User.findByIdAndDelete(id);
+
+        if(!user){
+            sendError(404, 'User not found');
+        }
+
+        return sendSuccess(res, 200, 'User deleted successfully');
+    } catch (error) {
+        return next(error);
+    }
+};

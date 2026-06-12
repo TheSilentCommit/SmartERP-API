@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { getUser, getUsers, updateUser } from "../controllers/user.controllers.js";
+import { deleteUser, getUser, getUsers, updateUser } from "../controllers/user.controllers.js";
 import { authorizeAdminOrOwner, authorizeGeneral } from "../middlewares/auth.middlewares.js";
 
 const userRouter = Router();
@@ -17,6 +17,6 @@ userRouter.get('/:id', authorizeGeneral, getUser);
 userRouter.put('/:id', authorizeGeneral, authorizeAdminOrOwner, updateUser);
 
 // api/v1/users/:id
-// userRouter.delete('/:id', (req, res) => {});
+userRouter.delete('/:id', authorizeGeneral, authorizeAdminOrOwner, deleteUser);
 
 export default userRouter;
