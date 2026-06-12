@@ -1,5 +1,3 @@
-
-
 export const validateFields = (fields) => {
     return (req, res, next) => {
         for(const field of fields){
