@@ -65,7 +65,12 @@ export const deleteUser = async (req, res, next) => {
             sendError(404, 'User not found');
         }
 
-        return sendSuccess(res, 200, 'User deleted successfully');
+        const data = {
+            name: user.name,
+            email: user.email
+        };
+
+        return sendSuccess(res, 200, 'User deleted successfully', data);
     } catch (error) {
         return next(error);
     }

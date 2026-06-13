@@ -29,9 +29,12 @@ finance, and sales.
 
 ```text
 src/
+├── config/
 ├── controllers/
+├── database/
+├── middlewares/
 ├── models/
 ├── routes/
-├── middlewares/
-├── config/
+├── utils/
+
 └── app.js
