@@ -13,7 +13,8 @@ export const getUsers = async (req, res, next) => {
 
 export const getUser = async (req, res, next) => {
     try {
-        const user = await User.findById(req.params.id);
+        const { id } = req.params;
+        const user = await User.findById(id);
 
         if(!user){
             sendError(404, 'User not found');

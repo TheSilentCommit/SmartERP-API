@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 
 import User from '../models/user.models.js';
 import { JWT_SECRET, JWT_EXPIRES_IN } from '../config/env.js';
+import { sendError, sendSuccess } from "../utils/responses.utils.js";
 
 export const signUp = async (req, res, next) => {
     const session = await mongoose.startSession();
@@ -15,9 +16,7 @@ export const signUp = async (req, res, next) => {
         const existingUser = await User.findOne({email});
 
         if(existingUser){
-            const error = new Error('E-mail already registered');
-            error.statusCode = 409;
-            throw error;
+            sendError(409, 'E-mail already registered');
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -31,14 +30,7 @@ export const signUp = async (req, res, next) => {
         await session.commitTransaction();
         session.endSession();
 
-        res.status(201).json({
-            success: true,
-            message: 'User created successfully',
-            data: {
-                token,
-                user: newUser[0]
-            }
-        });
+        sendSuccess(res, 201, 'User created successfully', { token, user: newUser[0] });
 
     } catch (error) {
         await session.abortTransaction();
@@ -54,17 +46,13 @@ export const sigIn = async (req, res, next) => {
         const user = await User.findOne({email}).select('+password');
         
         if(!user){
-            const error = new Error('User not found');
-            error.statusCode = 404;
-            throw error;
+            sendError(404, 'User not found');
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if(!isPasswordValid){
-            const error = new Error('Invalid password');
-            error.statusCode = 401;
-            throw error;
+            sendError(401, 'Invalid password');
         }
 
         const token = jwt.sign({userId: user._id}, JWT_SECRET, {expiresIn: JWT_EXPIRES_IN});
@@ -72,14 +60,8 @@ export const sigIn = async (req, res, next) => {
         const userSafe = user.toObject();
         delete userSafe.password;
 
-        res.status(200).json({
-            success: true,
-            message: 'User sign in successfully',
-            data: {
-                token,
-                userSafe
-            }
-        });
+        sendSuccess(res, 200, 'User sign in successfully', { token, userSafe });
+
     } catch (error){
         next(error);
     }

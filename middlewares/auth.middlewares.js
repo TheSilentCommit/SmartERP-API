@@ -1,14 +1,8 @@
 import jwt from 'jsonwebtoken';
 
 import { JWT_SECRET } from '../config/env.js';
+import { sendError } from '../utils/responses.utils.js';
 import User from '../models/user.models.js';
-
-const sendError = (res, statusCode, message) => {
-    return res.status(statusCode).json({
-        success: false,
-        message
-    });
-};
 
 export const authorizeGeneral = async (req, res, next) => {
     try {
@@ -19,7 +13,7 @@ export const authorizeGeneral = async (req, res, next) => {
         }
 
         if(!token){
-            return sendError(res, 401, 'Unauthorized');
+            sendError(401, 'Unauthorized');
         }
 
         const decoded = jwt.verify(token, JWT_SECRET);
@@ -27,7 +21,7 @@ export const authorizeGeneral = async (req, res, next) => {
         const user = await User.findById(decoded.userId);
 
         if(!user){
-            return sendError(res, 401, 'Unauthorized');
+            sendError(401, 'Unauthorized');
         }
 
         req.user = user;
@@ -35,13 +29,15 @@ export const authorizeGeneral = async (req, res, next) => {
         next();
 
     } catch (error) {
-        return sendError(res, 401, 'Unauthorized');
+        sendError(401, 'Unauthorized');
     }
 };
 
 export const authorizeAdmin = (req, res, next) => {
-    if(!req.user.admin){
-        return sendError(res, 403, 'Forbidden');
+    const { admin } = req.user.admin;
+
+    if(!admin){
+        sendError(403, 'Forbidden');
     }
 
     next();
@@ -56,7 +52,7 @@ export const authorizeUser = async (req, res, next) => {
         }
 
         if(!token){
-            return sendError(res, 403, 'Forbidden');
+            sendError(403, 'Forbidden');
         }
 
         const { id } = req.params;
@@ -66,25 +62,27 @@ export const authorizeUser = async (req, res, next) => {
         const user = await User.findById(decoded.userId);
 
         if(!user){
-            return sendError(res, 404, 'User not found');
+            sendError(404, 'User not found');
         }
 
         if(user._id.toString() !== id){
-            return sendError(res, 403, 'Forbidden');
+            sendError(403, 'Forbidden');
         }
 
         return next();
     } catch (error) {
-        return sendError(res, 403, 'Forbidden');
+        sendError(403, 'Forbidden');
     }
 };
 
 export const authorizeAdminOrOwner = (req, res, next) => {
-    const { id } = req.params;
+    const { paramsId } = req.params;
+    const { userId } = req.user._id.toString();
+    const { admin } = req.user.admin;
 
-    if(req.user.admin || req.user._id.toString() === id){
+    if(admin || userId === paramsId){
         return next();
     }
     
-    return sendError(res, 403, 'Forbidden');
+    sendError(403, 'Forbidden');
 };

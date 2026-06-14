@@ -5,6 +5,7 @@ import userRouter from './routes/user.routes.js';
 import connectToDatabase from './database/mongodb.js';
 import authRouter from './routes/auth.routes.js';
 import { errorMiddleware } from './middlewares/error.middlewares.js';
+import { sendSuccess } from './utils/responses.utils.js';
 
 const app = express();
 
@@ -20,10 +21,7 @@ app.use(errorMiddleware);
 
 // Homepage
 app.get('/', (req, res) => {
-    res.status(200).json({
-        success: true,
-        message: 'This is an API'
-    });
+    return sendSuccess(res, 200, 'This is an API');
 });
 
 app.listen(PORT, async () => {

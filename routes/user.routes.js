@@ -5,11 +5,9 @@ import { authorizeAdminOrOwner, authorizeGeneral } from "../middlewares/auth.mid
 
 const userRouter = Router();
 
-// OK
 // api/v1/users
 userRouter.get('/', authorizeGeneral, getUsers);
 
-// OK
 // api/v1/users/:id
 userRouter.get('/:id', authorizeGeneral, getUser);
 
