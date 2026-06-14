@@ -16,7 +16,7 @@ export const signUp = async (req, res, next) => {
         const existingUser = await User.findOne({email});
 
         if(existingUser){
-            sendError(409, 'E-mail already registered');
+            return sendError(409, 'E-mail already registered');
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -30,7 +30,7 @@ export const signUp = async (req, res, next) => {
         await session.commitTransaction();
         session.endSession();
 
-        sendSuccess(res, 201, 'User created successfully', { token, user: newUser[0] });
+        return sendSuccess(res, 201, 'User created successfully', { token, user: newUser[0] });
 
     } catch (error) {
         await session.abortTransaction();
@@ -46,13 +46,13 @@ export const sigIn = async (req, res, next) => {
         const user = await User.findOne({email}).select('+password');
         
         if(!user){
-            sendError(404, 'User not found');
+            return sendError(404, 'User not found');
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if(!isPasswordValid){
-            sendError(401, 'Invalid password');
+            return sendError(401, 'Invalid password');
         }
 
         const token = jwt.sign({userId: user._id}, JWT_SECRET, {expiresIn: JWT_EXPIRES_IN});
@@ -60,7 +60,7 @@ export const sigIn = async (req, res, next) => {
         const userSafe = user.toObject();
         delete userSafe.password;
 
-        sendSuccess(res, 200, 'User sign in successfully', { token, userSafe });
+        return sendSuccess(res, 200, 'User sign in successfully', { token, userSafe });
 
     } catch (error){
         next(error);
