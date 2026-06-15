@@ -17,7 +17,7 @@ export const getUser = async (req, res, next) => {
         const user = await User.findById(id);
 
         if(!user){
-            sendError(404, 'User not found');
+            return sendError(404, 'User not found');
         }
 
         return sendSuccess(res, 200, 'OK', user);
@@ -41,13 +41,13 @@ export const updateUser = async (req, res, next) => {
         }
 
         if(Object.keys(updateData).length === 0){
-            sendError(400, 'No valid field for update provided');
+            return sendError(400, 'No valid field for update provided');
         }
 
         const user = await User.findByIdAndUpdate(id, updateData, {returnDocument: 'after', runValidators: true});
 
         if(!user){
-            sendError(404, 'User not found');
+            return sendError(404, 'User not found');
         }
 
         return sendSuccess(res, 200, 'User updated successfully', user);
@@ -63,7 +63,7 @@ export const deleteUser = async (req, res, next) => {
         const user = await User.findByIdAndDelete(id);
 
         if(!user){
-            sendError(404, 'User not found');
+            return sendError(404, 'User not found');
         }
 
         const data = {

@@ -1,0 +1,40 @@
+[
+    
+{
+  "name": "Notebook Lenovo ThinkPad E14",
+  "description": "Notebook corporativo com Intel i5, 16GB RAM e SSD 512GB",
+  "sku": "NBK-THINKPAD-E14-001",
+  "barcode": "7891234567890",
+  "category": "notebooks",
+  "costPrice": 3200.00,
+  "salePrice": 4299.90,
+  "unit": "UN",
+  "active": true
+},
+
+{
+  "name": "Cabo USB-C 1m",
+  "description": "Cabo USB-C para carregamento e dados",
+  "sku": "CAB-USB-C-001",
+  "barcode": null,
+  "category": "acessorios",
+  "costPrice": 8.50,
+  "salePrice": 19.90,
+  "unit": "UN",
+  "active": true
+},
+
+{
+  "name": "Mouse Logitech M90",
+  "description": "Mouse óptico básico USB",
+  "sku": "MOU-LOG-M90",
+  "barcode": "097855074913",
+  "category": "perifericos",
+  "costPrice": 25.00,
+  "salePrice": 29.90,
+  "unit": "unit",
+  "active": true
+}
+
+
+]

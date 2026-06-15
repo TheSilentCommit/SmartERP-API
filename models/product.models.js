@@ -28,7 +28,6 @@ const productSchema = new mongoose.Schema(
 
         barcode: {
             type: String,
-            required: [true, 'The barcode is required'],
             sparse: true,
             trim: true
         },
