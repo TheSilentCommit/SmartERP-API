@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 
 import { NODE_ENV, DB_URI } from "../config/env.js";
-import { sendError } from "../utils/responses.utils.js";
 
 if(!DB_URI){
-    sendError(500, 'Please define the DB_URI in .env.<production/development>.local');
+    const error = new Error('Please define the DB_URI in .env.<production/development>.local');
+    error.statusCode = 500;
+    throw error;
 }
 
 const connectToDatabase = async () => {

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import { JWT_SECRET } from '../config/env.js';
-import { sendError } from '../utils/responses.utils.js';
+import { sendMessage } from '../utils/responses.utils.js';
 import User from '../models/user.models.js';
 
 export const authorizeGeneral = async (req, res, next) => {
@@ -13,7 +13,7 @@ export const authorizeGeneral = async (req, res, next) => {
         }
 
         if(!token){
-            sendError(401, 'Unauthorized');
+            return sendMessage(res, 401, 'Unauthorized', false);
         }
 
         const decoded = jwt.verify(token, JWT_SECRET);
@@ -21,7 +21,7 @@ export const authorizeGeneral = async (req, res, next) => {
         const user = await User.findById(decoded.userId);
 
         if(!user){
-            sendError(401, 'Unauthorized');
+            return sendMessage(res, 401, 'Unauthorized', false);
         }
 
         req.user = user;
@@ -29,7 +29,7 @@ export const authorizeGeneral = async (req, res, next) => {
         next();
 
     } catch (error) {
-        sendError(401, 'Unauthorized');
+        return sendMessage(res, 401, 'Unauthorized', false);
     }
 };
 
@@ -37,7 +37,7 @@ export const authorizeAdmin = (req, res, next) => {
     const { admin } = req.user.admin;
 
     if(!admin){
-        sendError(403, 'Forbidden');
+        return sendMessage(res, 403, 'Forbidden', false);
     }
 
     next();
@@ -52,7 +52,7 @@ export const authorizeUser = async (req, res, next) => {
         }
 
         if(!token){
-            sendError(403, 'Forbidden');
+            return sendMessage(res, 403, 'Forbidden', false);
         }
 
         const { id } = req.params;
@@ -62,16 +62,16 @@ export const authorizeUser = async (req, res, next) => {
         const user = await User.findById(decoded.userId);
 
         if(!user){
-            sendError(404, 'User not found');
+            return sendMessage(res, 404, 'User not found', false);
         }
 
         if(user._id.toString() !== id){
-            sendError(403, 'Forbidden');
+            return sendMessage(res, 403, 'Forbidden', false);
         }
 
         return next();
     } catch (error) {
-        sendError(403, 'Forbidden');
+        return sendMessage(res, 403, 'Forbidden', false);
     }
 };
 
@@ -84,5 +84,5 @@ export const authorizeAdminOrOwner = (req, res, next) => {
         return next();
     }
     
-    sendError(403, 'Forbidden');
+    return sendMessage(res, 403, 'Forbidden', false);
 };

@@ -1,13 +1,13 @@
 import express from 'express';
 
 import { NODE_ENV, PORT } from './config/env.js';
-import userRouter from './routes/user.routes.js';
-import connectToDatabase from './database/mongodb.js';
-import authRouter from './routes/auth.routes.js';
 import { errorMiddleware } from './middlewares/error.middlewares.js';
-import { sendSuccess } from './utils/responses.utils.js';
+import { sendMessage } from './utils/responses.utils.js';
+import userRouter from './routes/user.routes.js';
+import authRouter from './routes/auth.routes.js';
 import productRouter from './routes/product.routes.js';
 import stockRouter from './routes/stock.routes.js';
+import connectToDatabase from './database/mongodb.js';
 
 const app = express();
 
@@ -25,7 +25,7 @@ app.use(errorMiddleware);
 
 // Homepage
 app.get('/', (req, res) => {
-    return sendSuccess(res, 200, 'This is an API');
+    return sendMessage(res, 200, 'Welcome to SmartERP-API', true);
 });
 
 app.listen(PORT, async () => {

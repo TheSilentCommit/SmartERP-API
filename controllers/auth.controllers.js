@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 import User from '../models/user.models.js';
 import { JWT_SECRET, JWT_EXPIRES_IN } from '../config/env.js';
-import { sendError, sendSuccess } from "../utils/responses.utils.js";
+import { sendMessage } from "../utils/responses.utils.js";
 
 export const signUp = async (req, res, next) => {
     const session = await mongoose.startSession();
@@ -16,7 +16,7 @@ export const signUp = async (req, res, next) => {
         const existingUser = await User.findOne({email});
 
         if(existingUser){
-            return sendError(409, 'E-mail already registered');
+            return sendMessage(res, 409, 'E-mail already registered', false);
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -30,7 +30,7 @@ export const signUp = async (req, res, next) => {
         await session.commitTransaction();
         session.endSession();
 
-        return sendSuccess(res, 201, 'User created successfully', { token, user: newUser[0] });
+        return sendMessage(res, 201, 'User created successfully', true, { token, user: newUser[0] });
 
     } catch (error) {
         await session.abortTransaction();
@@ -46,13 +46,13 @@ export const sigIn = async (req, res, next) => {
         const user = await User.findOne({email}).select('+password');
         
         if(!user){
-            return sendError(404, 'User not found');
+            return sendMessage(res, 404, 'User not found', false);
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if(!isPasswordValid){
-            return sendError(401, 'Invalid password');
+            return sendMessage(res, 401, 'Invalid password', false);
         }
 
         const token = jwt.sign({userId: user._id}, JWT_SECRET, {expiresIn: JWT_EXPIRES_IN});
@@ -60,7 +60,7 @@ export const sigIn = async (req, res, next) => {
         const userSafe = user.toObject();
         delete userSafe.password;
 
-        return sendSuccess(res, 200, 'User sign in successfully', { token, userSafe });
+        return sendMessage(res, 200, 'User sign in successfully', true, { token, userSafe });
 
     } catch (error){
         next(error);

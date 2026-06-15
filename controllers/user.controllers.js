@@ -1,11 +1,11 @@
 import User from "../models/user.models.js";
-import { sendSuccess, sendError } from "../utils/responses.utils.js";
+import { sendMessage } from "../utils/responses.utils.js";
 
 export const getUsers = async (req, res, next) => {
     try {
         const users = await User.find();
 
-        return sendSuccess(res, 200, 'OK', users);
+        return sendMessage(res, 200, 'OK', true, users);
     } catch (error) {
         return next(error);
     }
@@ -17,10 +17,10 @@ export const getUser = async (req, res, next) => {
         const user = await User.findById(id);
 
         if(!user){
-            return sendError(404, 'User not found');
+            return sendMessage(res, 404, 'User not found', false);
         }
 
-        return sendSuccess(res, 200, 'OK', user);
+        return sendMessage(res, 200, 'OK', true, user);
     } catch (error) {
         return next(error);
     }
@@ -41,16 +41,16 @@ export const updateUser = async (req, res, next) => {
         }
 
         if(Object.keys(updateData).length === 0){
-            return sendError(400, 'No valid field for update provided');
+            return sendMessage(res, 400, 'No valid field for update provided', false);
         }
 
         const user = await User.findByIdAndUpdate(id, updateData, {returnDocument: 'after', runValidators: true});
 
         if(!user){
-            return sendError(404, 'User not found');
+            return sendMessage(res, 404, 'User not found', false);
         }
 
-        return sendSuccess(res, 200, 'User updated successfully', user);
+        return sendMessage(res, 200, 'User updated successfully', true, user);
     } catch (error) {
         return next(error);
     }
@@ -63,7 +63,7 @@ export const deleteUser = async (req, res, next) => {
         const user = await User.findByIdAndDelete(id);
 
         if(!user){
-            return sendError(404, 'User not found');
+            return sendMessage(res, 404, 'User not found', false);
         }
 
         const data = {
@@ -71,7 +71,7 @@ export const deleteUser = async (req, res, next) => {
             email: user.email
         };
 
-        return sendSuccess(res, 200, 'User deleted successfully', data);
+        return sendMessage(res, 200, 'User deleted successfully', true, data);
     } catch (error) {
         return next(error);
     }

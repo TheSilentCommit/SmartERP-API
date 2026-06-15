@@ -1,12 +1,6 @@
-export const sendError = (statusCode, message) => {
-    const error = new Error(message);
-    error.statusCode = statusCode;
-    throw error;
-};
-
-export const sendSuccess = (res, statusCode, message, data=null) => {
+export const sendMessage = (res, statusCode, message, success, data=null) => {
     return res.status(statusCode).json({
-        success: true,
+        success,
         message,
         data
     });
