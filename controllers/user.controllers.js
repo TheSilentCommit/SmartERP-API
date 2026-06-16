@@ -67,7 +67,7 @@ export const deleteUser = async (req, res, next) => {
         }
 
         const data = {
-            name: user.name,
+            name: user.name, 
             email: user.email
         };
 

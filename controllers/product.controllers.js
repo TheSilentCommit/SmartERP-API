@@ -5,7 +5,7 @@ import { sendMessage } from "../utils/responses.utils.js";
 export const getProducts = async (req, res, next) => {
     try {
         const products = await Product.find();
-
+ 
         return sendMessage(res, 200, 'OK', true, products)
     } catch (error) {
         next(error);

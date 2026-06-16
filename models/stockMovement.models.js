@@ -16,7 +16,7 @@ const stockMovementSchema = mongoose.Schema(
             index: true
         },
 
-        quantity: {
+        quantity: { 
             type: Number,
             required: true,
             min: 1

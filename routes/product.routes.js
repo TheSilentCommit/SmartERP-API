@@ -13,7 +13,7 @@ productRouter.get('/:id', authorizeGeneral, getProduct);
 productRouter.put('/:id', authorizeAdmin, updateProduct);
 
 productRouter.post('/', authorizeAdmin, createProduct);
-
+ 
 productRouter.delete('/:id', authorizeAdmin, deleteProduct);
 
 export default productRouter;

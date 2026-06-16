@@ -10,4 +10,4 @@ stockRouter.get('/history/:id');
 
 stockRouter.get('/balance/:id');
 
-export default stockRouter;
+export default stockRouter; 

@@ -82,7 +82,7 @@ export const authorizeAdminOrOwner = (req, res, next) => {
 
     if(admin || userId === paramsId){
         return next();
-    }
+    } 
     
     return sendMessage(res, 403, 'Forbidden', false);
 };

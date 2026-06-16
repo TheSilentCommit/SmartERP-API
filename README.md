@@ -16,9 +16,9 @@ finance, and sales.
 - Scalable modular architecture (MVC)
 
 ## Tech Stack
-
+ 
 - Node.js
-- Express.js
+- Express.js 
 - MongoDB
 - Mongoose
 - JSON Web Token (JWT)

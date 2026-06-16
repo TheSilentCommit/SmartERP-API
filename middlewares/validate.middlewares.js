@@ -9,6 +9,6 @@ export const validateFields = (fields) => {
             }
         }
 
-        next();
+        next(); 
     };
 };

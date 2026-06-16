@@ -7,7 +7,7 @@ if(!DB_URI){
     error.statusCode = 500;
     throw error;
 }
-
+ 
 const connectToDatabase = async () => {
     try {
         await mongoose.connect(DB_URI);

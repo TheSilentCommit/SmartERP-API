@@ -17,7 +17,7 @@ const addStock = async (res, operations, userId) => {
 
         for(const operation of operations){
             const { 
-                product, 
+                product,
              } = operation;
         }
     } catch (error) {

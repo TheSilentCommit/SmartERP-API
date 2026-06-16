@@ -27,7 +27,7 @@ app.use(errorMiddleware);
 app.get('/', (req, res) => {
     return sendMessage(res, 200, 'Welcome to SmartERP-API', true);
 });
-
+ 
 app.listen(PORT, async () => {
     console.log(`API is running as ${NODE_ENV.toUpperCase()} in port ${PORT}`);
 

@@ -17,4 +17,4 @@ userRouter.put('/:id', authorizeGeneral, authorizeAdminOrOwner, updateUser);
 // api/v1/users/:id
 userRouter.delete('/:id', authorizeGeneral, authorizeAdminOrOwner, deleteUser);
 
-export default userRouter;
+export default userRouter; 

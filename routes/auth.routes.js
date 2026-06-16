@@ -11,6 +11,6 @@ authRouter.post('/sign-in', validateFields(['email', 'password']), sigIn);
 // api/v1/auth/sign-up
 authRouter.post('/sign-up', validateFields(['name', 'email', 'password']), signUp);
 
-// authRouter.post('/sign-out');
+// authRouter.post('/sign-out'); 
 
 export default authRouter;

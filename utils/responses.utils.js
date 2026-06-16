@@ -4,4 +4,4 @@ export const sendMessage = (res, statusCode, message, success, data=null) => {
         message,
         data
     });
-};
+}; 
