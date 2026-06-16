@@ -13,7 +13,13 @@ const addStock = async (res, operations, userId) => {
     session.startTransaction();
 
     try {
-        
+        const movement = [];
+
+        for(const operation of operations){
+            const { 
+                product, 
+             } = operation;
+        }
     } catch (error) {
         session.abortTransaction();
         session.endSession();
