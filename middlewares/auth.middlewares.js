@@ -43,7 +43,7 @@ export const authorizeAdmin = (req, res, next) => {
     next();
 };
 
-export const authorizeUser = async (req, res, next) => {
+export const authorizeOwner = async (req, res, next) => {
     try {
         let token;
 
