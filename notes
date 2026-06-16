@@ -38,3 +38,17 @@
 
 
 ]
+
+# ToDo
+{
+  addStock()
+  removeStock()
+  adjustStock()
+  getCurrentStock()
+  getStockHistory()
+}
+
+{
+  implement the user batch register
+}
+

@@ -18,7 +18,7 @@ app.use(express.json());
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/products', productRouter);
-app.use('api/v1/stock', stockRouter);
+app.use('api/v1/stocks', stockRouter);
 
 // Error Middleware
 app.use(errorMiddleware);
