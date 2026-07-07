@@ -4,11 +4,12 @@
  export const addStockController = async (req, res, next) => {
     try {
         const { operations } = req.body;
+
         const userId = req.user.id;
 
-        const result = await addStockService(res, operations, userId);
+        const result = await addStockService(operations, userId);
 
-        return sendMessage(res, 201, 'Success', true, result);
+        return sendMessage(res, result.code, result.message, result.success, result.data);
 
     } catch (error) {
         next(error);
@@ -20,9 +21,9 @@ export const removeStockController = async (req, res, next) => {
         const { operations } = req.body;
         const userId = req.user.id;
 
-        const result = await removeStockService(res, operations, userId);
+        const result = await removeStockService(operations, userId);
 
-        return sendMessage(res, 201, 'Success', true, result);
+        return sendMessage(res, result.code, result.message, result.success, result.data);
     } catch (error) {
         next(error);
     }

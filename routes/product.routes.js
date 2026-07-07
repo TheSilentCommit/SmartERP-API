@@ -6,14 +6,14 @@ import { authorizeAdmin, authorizeGeneral } from "../middlewares/auth.middleware
 
 const productRouter = Router();
 
-productRouter.get('/', authorizeGeneral, getProducts);
+productRouter.get('/', getProducts);
 
-productRouter.get('/:id', authorizeGeneral, getProduct);
+productRouter.get('/:id', getProduct);
 
-productRouter.put('/:id', authorizeAdmin, updateProduct);
+productRouter.put('/:id', updateProduct);
 
-productRouter.post('/', authorizeAdmin, createProduct);
+productRouter.post('/', createProduct);
  
-productRouter.delete('/:id', authorizeAdmin, deleteProduct);
+productRouter.delete('/:id', deleteProduct);
 
 export default productRouter;

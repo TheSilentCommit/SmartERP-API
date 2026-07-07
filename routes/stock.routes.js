@@ -1,15 +1,24 @@
 import { Router } from "express";
 
-import { addStockController, removeStockController } from "../controllers/stock.controllers";
+import { addStockController, removeStockController } from "../controllers/stock.controllers.js";
+import { authorizeGeneral } from "../middlewares/auth.middlewares.js";
 
-const stockRouter = Router();
+const stocksRouter = Router();
 
-stockRouter.post('/in', addStockController);
+// api/v1/stocks/in
+stocksRouter.post('/in', authorizeGeneral, addStockController);
 
-stockRouter.post('/out', removeStockController);
+// api/v1/stocks/out
+stocksRouter.post('/out', removeStockController);
 
-stockRouter.get('/history/:id');
+stocksRouter.post('/adjust');
 
-stockRouter.get('/balance/:id');
+stocksRouter.get('/history');
 
-export default stockRouter; 
+stocksRouter.get('/history/:sku');
+
+stocksRouter.get('/balance');
+
+stocksRouter.get('/balance/:sku');
+
+export default stocksRouter; 
