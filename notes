@@ -41,14 +41,10 @@
 
 # ToDo
 {
-  addStock()
-  removeStock()
-  adjustStock()
-  getCurrentStock()
-  getStockHistory()
+  In stockServices, refactor to if some operation fails, it skip to the next one
 }
 
 {
-  implement the user batch register
+  Implement the user batch register
 }
 
