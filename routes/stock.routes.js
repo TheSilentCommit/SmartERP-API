@@ -9,7 +9,7 @@ const stocksRouter = Router();
 stocksRouter.post('/in', authorizeGeneral, addStockController);
 
 // api/v1/stocks/out
-stocksRouter.post('/out', removeStockController);
+stocksRouter.post('/out', authorizeGeneral, removeStockController);
 
 stocksRouter.post('/adjust');
 

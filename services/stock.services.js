@@ -25,17 +25,21 @@ export const addStockService = async (operations, userId) => {
                 referenceType = 'MANUAL',
                 referenceId = null,
                 unitCost = null,
+                unitPrice = null,
                 metadata = {}
             } = operation;
 
             if(!quantity || quantity <= 0){
-                // Change this to skip this operation to the next one
+                await session.abortTransaction();
+
                 return {code: 400, message: 'Invalid quantity. Must be greater than 0', success: false, data: null};
             }
 
-            const productExists = await Product.findById(product).session(session);
+            const productDoc = await Product.findById(product).session(session);
 
-            if(!productExists){
+            if(!productDoc){
+                await session.abortTransaction();
+
                 return {code: 404, message: 'Product not found', success: false, data: null};
             }
 
@@ -44,7 +48,7 @@ export const addStockService = async (operations, userId) => {
             if(balances[product] !== undefined){
                 currentBalance = balances[product];
             } else{
-                const lastMovement = await StockMovement.findOne({ product: product })
+                const lastMovement = await StockMovement.findById(product)
                 .sort({ createdAt: -1 }).session(session);
                 
                 currentBalance = lastMovement?.balanceAfter ?? 0;
@@ -63,6 +67,7 @@ export const addStockService = async (operations, userId) => {
                 referenceType,
                 referenceId,
                 unitCost,
+                unitPrice,
                 createdBy: userId,
                 metadata
             });
@@ -82,7 +87,7 @@ export const addStockService = async (operations, userId) => {
     }
 };
 
-export const removeStockService = async (res, operations, userId, next) => {
+export const removeStockService = async (operations, userId) => {
     if(!Array.isArray(operations)){
         return {code: 400, message: 'Operations must be an array', success: false, data: null};
     }
@@ -101,35 +106,53 @@ export const removeStockService = async (res, operations, userId, next) => {
                 reason = null,
                 referenceType = 'MANUAL',
                 referenceId = null,
-                unitCost = null
+                unitCost = null,
+                unitPrice = null,
+                metadata = {}
             } = operation;
 
             if(!quantity || quantity <= 0){
-                // Change this to skip this operation to the next one
+                await session.abortTransaction();
+
                 return {code: 400, message: 'Invalid quantity. Must be greater than 0', success: false, data: null};
             }
 
-            const productExists = await Product.findById(product).session(session);
+            const productDoc = await Product.findById(product).session(session);
 
-            if(!productExists){
+            if(!productDoc){
+                await session.abortTransaction();
+
                 return {code: 404, message: 'Product not found', success: false, data: null};
+            }
+
+            if(!unitCost || unitCost < 0){
+                await session.abortTransaction();
+
+                return {code: 400, message: 'Unit cost must be greater than 0', success: false, data: null};
+            }
+
+            if(!unitPrice || unitPrice < 0){
+                await session.abortTransaction();
+
+                return {code: 400, message: 'Unit price must be greater than 0', success: false, data: null};
             }
 
             let currentBalance;
 
             if(balances[product] !== undefined){
-                currentBalance = balances[productId];
+                currentBalance = balances[product];
             } else{
-                const lastMovement = await StockMovement.findOne({ product: product })
-                .sort({ createdAt: -1 }).session({ session });
+                const lastMovement = await StockMovement.findOne({ product })
+                .sort({ createdAt: -1 }).session(session);
 
                 currentBalance = lastMovement?.balanceAfter ?? 0;
             }
 
             const balanceAfter = currentBalance - quantity;
 
-            if(!balanceAfter || balanceAfter < 0){
-                // Change this to skip this operation to the next one
+            if(balanceAfter < 0){
+                await session.abortTransaction();
+
                 return {code: 400, message: 'Invalid quantity. Not enough stock', success: false, data: null};
             }
 
@@ -137,13 +160,14 @@ export const removeStockService = async (res, operations, userId, next) => {
 
             movements.push({
                 product: product,
-                type: 'IN',
+                type: 'OUT',
                 quantity,
                 balanceAfter,
                 reason,
                 referenceType,
                 referenceId,
                 unitCost,
+                unitPrice,
                 createdBy: userId,
                 metadata
             });
@@ -153,11 +177,11 @@ export const removeStockService = async (res, operations, userId, next) => {
 
         await session.commitTransaction();
 
-        return {code: 201, message: '', success: true, data: createdMovements};
+        return {code: 201, message: 'Stock movement created successfully', success: true, data: createdMovements};
 
     } catch (error) {
-        session.abortTransaction();
-        next(error);
+        await session.abortTransaction();
+        throw error;
     } finally {
         session.endSession();
     }

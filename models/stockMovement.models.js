@@ -49,6 +49,12 @@ const stockMovementSchema = mongoose.Schema(
             min: 0
          },
 
+         unitPrice: {
+            type: Number,
+            min: 0,
+            default: null
+         },
+
          createdBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
@@ -64,6 +70,8 @@ const stockMovementSchema = mongoose.Schema(
 
 stockMovementSchema.index({ product: 1, createdAt: -1 });
 stockMovementSchema.index({ referenceType: 1, referenceId: 1 });
+stockMovementSchema.index({ createdBy: 1, createdAt: -1});
+stockMovementSchema.index({ type: 1, createdAt: -1});
 
 const StockMovement = mongoose.model('StockMovement', stockMovementSchema);
 
