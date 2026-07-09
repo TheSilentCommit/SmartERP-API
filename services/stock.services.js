@@ -316,3 +316,43 @@ export const getProductHistoryByIdService = async (productId) => {
 
     return {code: 200, message: 'Stock movements', success: true, data: movements};
 };
+
+export const getBalanceService = async () => {
+    try {
+        const movements = await StockMovement.aggregate([ { $sort: { createdAt: -1 } },
+            {
+                $group: {
+                    _id: '$product',
+                    movement: {
+                        $first: '$$ROOT'
+                    }
+                }
+            },
+            {
+                $replaceRoot: {
+                    newRoot: '$movement'
+                }
+            }
+        ]);
+
+        return {code: 200, message: 'Products balance', success: true, data: movements};
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getProductBalanceByIdService = async (productId) => {
+    try {
+        const product = await Product.findById(productId);
+
+        if(!product){
+            return {code: 404, message: 'Product not found', success: false, data: []};
+        }
+
+        const movement = await StockMovement.findOne({ product: productId }).sort({ createdAt: -1 });
+
+        return {code: 200, message: 'Product balance', success: true, data: movement};
+    } catch (error) {
+        throw error;
+    }
+};

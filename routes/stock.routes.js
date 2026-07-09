@@ -3,6 +3,8 @@ import { Router } from "express";
 import { 
     addStockController, 
     adjustStockController, 
+    getBalanceController, 
+    getProductBalanceByIdController, 
     getProductHistoryByIdController, 
     getProductHistoryController, 
     removeStockController,
@@ -24,12 +26,12 @@ stocksRouter.post('/adjust', authorizeGeneral, adjustStockController);
 stocksRouter.get('/history', authorizeGeneral, getProductHistoryController);
 
 // api/v1/stocks/history/:sku
-stocksRouter.get('/history/:id', getProductHistoryByIdController);
+stocksRouter.get('/history/:id', authorizeGeneral, getProductHistoryByIdController);
 
 // api/v1/stocks/balance
-stocksRouter.get('/balance');
+stocksRouter.get('/balance', getBalanceController);
 
 // api/v1/stocks/balance/:sku
-stocksRouter.get('/balance/:id');
+stocksRouter.get('/balance/:id', getProductBalanceByIdController);
 
 export default stocksRouter; 

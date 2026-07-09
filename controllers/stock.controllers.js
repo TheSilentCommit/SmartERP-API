@@ -3,7 +3,9 @@
     removeStockService, 
     adjustStockService,
     getProductHistoryService,
-    getProductHistoryByIdService
+    getProductHistoryByIdService,
+    getBalanceService,
+    getProductBalanceByIdService
 } from '../services/stock.services.js';
  import { sendMessage } from '../utils/responses.utils.js';
 
@@ -60,9 +62,31 @@ export const getProductHistoryController = async (req, res, next) => {
 
 export const getProductHistoryByIdController = async (req, res, next) => {
     try {
+        const { productId } = req.params;
+
+        const result = await getProductHistoryByIdService(productId);
+
+        return sendMessage(res, result.code, result.message, result.success, result.data);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getBalanceController = async (req, res, next) => {
+    try {
+        const result = await getBalanceService();
+
+        return sendMessage(res, result.code, result.message, result.success, result.data);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getProductBalanceByIdController = async (req, res, next) => {
+    try {
         const { id } = req.params;
 
-        const result = await getProductHistoryByIdService(id);
+        const result = await getProductBalanceByIdService(id);
 
         return sendMessage(res, result.code, result.message, result.success, result.data);
     } catch (error) {
