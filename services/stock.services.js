@@ -292,7 +292,7 @@ export const adjustStockService = async (operations, userId) => {
     }
 };
 
-export const historyStockService = async () => {
+export const getProductHistoryService = async () => {
     try {
         const movements = await StockMovement.find().sort({ createdAt: -1 });
 
@@ -301,4 +301,18 @@ export const historyStockService = async () => {
     } catch (error) {
         throw error;
     }
+};
+
+export const getProductHistoryByIdService = async (productId) => {
+    
+    const product = await Product.findById(productId);
+
+    if(!product){
+        return {code: 404, message: 'Product not found', success: false, data: []};
+    }
+
+    const movements = await StockMovement.find({ product: productId })
+    .populate("createdBy", "name email").sort({ createdAt: -1 });
+
+    return {code: 200, message: 'Stock movements', success: true, data: movements};
 };

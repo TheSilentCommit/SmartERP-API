@@ -1,7 +1,11 @@
 import { Router } from "express";
 
 import { 
-    addStockController, adjustStockController, historyStockController, removeStockController 
+    addStockController, 
+    adjustStockController, 
+    getProductHistoryByIdController, 
+    getProductHistoryController, 
+    removeStockController,
 } from "../controllers/stock.controllers.js";
 import { authorizeGeneral } from "../middlewares/auth.middlewares.js";
 
@@ -17,15 +21,15 @@ stocksRouter.post('/out', authorizeGeneral, removeStockController);
 stocksRouter.post('/adjust', authorizeGeneral, adjustStockController);
 
 // api/v1/stocks/history
-stocksRouter.get('/history', historyStockController);
+stocksRouter.get('/history', authorizeGeneral, getProductHistoryController);
 
 // api/v1/stocks/history/:sku
-stocksRouter.get('/history/:sku');
+stocksRouter.get('/history/:id', getProductHistoryByIdController);
 
 // api/v1/stocks/balance
 stocksRouter.get('/balance');
 
 // api/v1/stocks/balance/:sku
-stocksRouter.get('/balance/:sku');
+stocksRouter.get('/balance/:id');
 
 export default stocksRouter; 

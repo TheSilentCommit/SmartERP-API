@@ -1,4 +1,10 @@
- import { addStockService, removeStockService, adjustStockService, historyStockService } from '../services/stock.services.js';
+ import { 
+    addStockService, 
+    removeStockService, 
+    adjustStockService,
+    getProductHistoryService,
+    getProductHistoryByIdService
+} from '../services/stock.services.js';
  import { sendMessage } from '../utils/responses.utils.js';
 
  export const addStockController = async (req, res, next) => {
@@ -42,9 +48,21 @@ export const adjustStockController = async (req, res, next) => {
     }
 };
 
-export const historyStockController = async (req, res, next) => {
+export const getProductHistoryController = async (req, res, next) => {
     try {
-        const result = await historyStockService();
+        const result = await getProductHistoryService();
+
+        return sendMessage(res, result.code, result.message, result.success, result.data);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getProductHistoryByIdController = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        const result = await getProductHistoryByIdService(id);
 
         return sendMessage(res, result.code, result.message, result.success, result.data);
     } catch (error) {
