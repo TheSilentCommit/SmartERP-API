@@ -9,11 +9,13 @@ finance, and sales.
 - User authentication (JWT)
 - User CRUD operations
 - Password hashing with bcrypt
-- Role-based access support (admin/user)
-- Middleware-based validation
-- RESTful API structure
+- Role-based access control (Admin/User)
+- Middleware-based request validation
+- RESTful API architecture
 - Centralized error handling
-- Scalable modular architecture (MVC)
+- Scalable MVC architecture
+- Complete audit trail for stock movements
+- MongoDB transactions for inventory consistency
 
 ## Tech Stack
  
