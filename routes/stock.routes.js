@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { 
-    addStockController, adjustStockController, removeStockController 
+    addStockController, adjustStockController, historyStockController, removeStockController 
 } from "../controllers/stock.controllers.js";
 import { authorizeGeneral } from "../middlewares/auth.middlewares.js";
 
@@ -17,7 +17,7 @@ stocksRouter.post('/out', authorizeGeneral, removeStockController);
 stocksRouter.post('/adjust', authorizeGeneral, adjustStockController);
 
 // api/v1/stocks/history
-stocksRouter.get('/history');
+stocksRouter.get('/history', historyStockController);
 
 // api/v1/stocks/history/:sku
 stocksRouter.get('/history/:sku');

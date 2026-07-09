@@ -291,3 +291,14 @@ export const adjustStockService = async (operations, userId) => {
         session.endSession();
     }
 };
+
+export const historyStockService = async () => {
+    try {
+        const movements = await StockMovement.find().sort({ createdAt: -1 });
+
+        return {code: 200, message: 'Stock movements history', success: true, data: movements};
+
+    } catch (error) {
+        throw error;
+    }
+};
