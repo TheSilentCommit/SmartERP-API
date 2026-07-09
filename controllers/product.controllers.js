@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import Product from "../models/product.models.js";
 import { sendMessage } from "../utils/responses.utils.js";
 
