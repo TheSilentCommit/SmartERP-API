@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const stockMovementSchema = mongoose.Schema(
+const stockMovementSchema = new mongoose.Schema(
     {
         product: {
             type: mongoose.Schema.Types.ObjectId,
