@@ -31,7 +31,12 @@ export const getSupplierController = async (req, res, next) => {
 
 export const createSuppliersController = async (req, res, next) => {
     try {
-        
+        const { operations } = req.body;
+        const userId = req.user.id;
+
+        const result = await createSuppliersService(operations, userId);
+
+        return sendMessage(res, result.code, result.message, result.success, result.data);
     } catch (error) {
         next(error);
     }
