@@ -206,13 +206,16 @@ export const updateSupplierService = async (data, supplierId, userId) => {
     }
 };
 
-export const deleteSupplierService = async (supplierId) => {
+export const deleteSupplierService = async (supplierId, userId) => {
     try {
         const supplier = await Supplier.findByIdAndUpdate(
             supplierId, 
-            { active: false },
+            { 
+                active: false,
+                updatedBy: userId
+            },
             { returnDocument: 'after' }
-        );
+        ).populate('updatedBy', 'name');
 
         if(!supplier){
             return {code: 404, message: 'Supplier not found', success: false, data: []};
@@ -221,7 +224,8 @@ export const deleteSupplierService = async (supplierId) => {
         const data = {
             name: supplier.name,
             tradeName: supplier.tradeName,
-            code: supplier.code
+            code: supplier.code,
+            updatedBy: supplier.updatedBy?.name
         };
 
         return {code: 200, message: 'Supplier deleted successfully', success: true, data};

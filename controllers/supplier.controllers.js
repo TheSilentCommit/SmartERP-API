@@ -59,8 +59,9 @@ export const updateSupplierController = async (req, res, next) => {
 export const deleteSupplierController = async (req, res, next) => {
     try {
         const { id } = req.params;
+        const userId = req.user.id;
 
-        const result = await deleteSupplierService(id);
+        const result = await deleteSupplierService(id, userId);
 
         return sendMessage(res, result.code, result.message, result.success, result.data);
     } catch (error) {
