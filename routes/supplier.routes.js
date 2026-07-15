@@ -12,9 +12,9 @@ import { authorizeGeneral } from "../middlewares/auth.middlewares.js";
 
 const supplierRouter = Router();
 
-supplierRouter.get('/', getSuppliersController);
+supplierRouter.get('/', authorizeGeneral, getSuppliersController);
 
-supplierRouter.get('/:id', getSupplierController);
+supplierRouter.get('/:id', authorizeGeneral, getSupplierController);
 
 supplierRouter.post('/', authorizeGeneral, createSuppliersController);
 
