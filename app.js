@@ -9,6 +9,7 @@ import productRouter from './routes/product.routes.js';
 import stocksRouter from './routes/stock.routes.js';
 import connectToDatabase from './database/mongodb.js';
 import supplierRouter from './routes/supplier.routes.js';
+import clientRouter from './routes/client.routes.js';
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/products', productRouter);
 app.use('/api/v1/stocks', stocksRouter);
 app.use('/api/v1/suppliers', supplierRouter);
+app.use('/api/v1/clients', clientRouter);
 
 // Error Middleware
 app.use(errorMiddleware);
