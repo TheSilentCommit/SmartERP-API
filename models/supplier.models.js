@@ -122,10 +122,15 @@ const supplierSchema = new mongoose.Schema({
         required: true
     },
 
+    updatedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: null
+    },
+
     active: {
         type: Boolean,
         default: true,
-        index: true
     },
 
     metadata: {

@@ -40,37 +40,38 @@ export const createSuppliersService = async (operations, userId) => {
         return {code: 400, message: 'Operations must be an array', success: false, data: []};
     }
 
-    const session = await mongoose.startSession()
-    session.startTransaction();
+    if(operations.length === 0){
+        return {code: 400, message: 'Operations array cannot be empty', success: false, data: []};
+    }
 
     const suppliers = [];
 
+    const documents = operations.map(op => op.document);
+
+    const duplicatedDocuments = documents.filter((doc, index) => documents.indexOf(doc) !== index);
+
+    if(duplicatedDocuments.length > 0){
+        return {code: 400, message: 'Duplicate documents found in the request', success: false, 
+            data: [...new Set(duplicatedSupplier)]
+        };
+    }
+
+    const existingSuppliers = await Supplier.find({ document: { $in: documents } });
+
+    if(existingSuppliers.length > 0){
+        return {code: 400, message: 'One or more suppliers are already registered', success: false, 
+            data: existingSupplier.map(s => ({
+                name: s.name,
+                tradeName: s.tradeName,
+                document: s.document
+            }))
+        };
+    }
+
+    const session = await mongoose.startSession()
+
     try {
-        const documents = operations.map(op => op.document);
-
-        const existingSupplier = await Supplier.find({ document: { $in: documents } });
-
-        if(existingSupplier.length > 0){
-            await session.abortTransaction();
-
-            return {code: 400, message: 'One or more suppliers are already registered', success: false, 
-                data: existingSupplier.map(s => ({
-                    name: s.name,
-                    tradeName: s.tradeName,
-                    document: s.document
-                }))
-            };
-        }
-
-        const duplicatedSupplier = documents.filter((doc, index) => documents.indexOf(doc) !== index);
-
-        if(duplicatedSupplier.length > 0){
-            await session.abortTransaction();
-
-            return {code: 400, message: 'Duplicate documents found in the request', success: false, 
-                data: [...new Set(duplicatedSupplier)]
-            };
-        }
+        session.startTransaction();
 
         for(const operation of operations){
             const {
@@ -138,8 +139,71 @@ export const createSuppliersService = async (operations, userId) => {
     
 };
 
-export const updateSupplierService = async (operation, supplierId) => {
+export const updateSupplierService = async (data, supplierId, userId) => {
 
+    const session = await mongoose.startSession();
+    
+    try {
+        session.startTransaction();
+
+        const updateData = {};
+
+        const allowedFields = [
+            'name',
+            'tradeName',
+            'document',
+            'documentType',
+            'code',
+            'email',
+            'mainPhone',
+            'secondaryPhone',
+            'website',
+            'contactPerson'
+        ];
+
+        for (const field of allowedFields) {
+            
+            if (data[field] !== undefined) {
+                updateData[field] = data[field];
+            }
+        }
+
+        if (data.address) {
+            for (const [key, value] of Object.entries(data.address)) {
+                updateData[`address.${key}`] = value;
+            }
+        }
+
+        updateData.updatedBy = userId;
+
+        const supplier = await Supplier.findByIdAndUpdate(
+            supplierId,
+            { $set: updateData },
+            {
+                returnDocument: 'after',
+                runValidators: true,
+                session
+            }
+        );
+
+        if(!supplier){
+            await session.abortTransaction();
+
+            return {code: 404, message: 'Supplier not found', success: false, data: []};
+        }
+
+        await session.commitTransaction();
+
+        return {code: 200, message: 'Supplier updated successfully', success: true, data: supplier};
+        
+    } catch (error) {
+        await session.abortTransaction();
+
+        error.message = `[updateSupplierService] ${error.message}`;
+        throw error;
+    } finally {
+        session.endSession();
+    }
 };
 
 export const deleteSupplierService = async (supplierId) => {

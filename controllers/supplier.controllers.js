@@ -43,9 +43,27 @@ export const createSuppliersController = async (req, res, next) => {
 };
 
 export const updateSupplierController = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const data = req.body;
+        const userId = req.user.id;
 
+        const result = await updateSupplierService(data, id, userId);
+
+        return sendMessage(res, result.code, result.message, result.success, result.data);
+    } catch (error) {
+        next(error);
+    }
 };
 
 export const deleteSupplierController = async (req, res, next) => {
+    try {
+        const { id } = req.params;
 
+        const result = await deleteSupplierService(id);
+
+        return sendMessage(res, result.code, result.message, result.success, result.data);
+    } catch (error) {
+        next(error);
+    }
 };
