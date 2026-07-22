@@ -2,14 +2,18 @@ import { sendMessage } from "../utils/responses.utils";
 
 export const getClientsController = async (req, res, next) => {
     try {
-        
+        const result = getClientsService();
     } catch (error) {
         next(error);
     }
 };
 
 export const getClientController = async (req, res, next) => {
-
+    try {
+        
+    } catch (error) {
+        next(error);
+    }
 };
 
 export const createClientsController = async (req, res, next) => {

@@ -1,17 +1,24 @@
 import { Router } from "express";
 
 import { authorizeGeneral } from "../middlewares/auth.middlewares";
+import {
+    getClientsController,
+    getClientController,
+    createClientsController,
+    updateClientController,
+    deleteClientController
+} from '../controllers/client.controllers.js';
 
 const clientRouter = Router();
 
-clientRouter.get('/');
+clientRouter.get('/', getClientsController);
 
-clientRouter.get('/:id');
+clientRouter.get('/:id', getClientController);
 
-clientRouter.post('/');
+clientRouter.post('/', createClientsController);
 
-clientRouter.put('/:id');
+clientRouter.put('/:id', updateClientController);
 
-clientRouter.delete('/id');
+clientRouter.delete('/id', deleteClientController);
 
 export default clientRouter;
