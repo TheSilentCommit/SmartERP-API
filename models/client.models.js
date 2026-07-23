@@ -11,6 +11,7 @@ const clientSchema = new mongoose.Schema({
 
     document: {
         type: String,
+        required: [true, 'Client document is required'],
         trim: true,
         unique: true
     },
@@ -31,11 +32,73 @@ const clientSchema = new mongoose.Schema({
     },
 
     phone: {
-        
+        type: String,
+        trim: true
     },
-    
+
+    address: {
+        street: {
+            type: String,
+            trim: true
+        },
+
+        number: {
+            type: String,
+            trim: true
+        },
+
+        complement: {
+            type: String,
+            trim: true
+        },
+
+        district: {
+            type: String,
+            trim: true
+        },
+
+        city: {
+            type: String,
+            trim: true
+        },
+
+        state: {
+            type: String,
+            trim: true
+        },
+
+        zipCode: {
+            type: String,
+            trim: true
+        },
+
+        country: {
+            type: String,
+            trim: true,
+            default: 'Brazil'
+        }
+    },
+
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+
+    updatedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: null
+    },
+
+    metadata: {
+        type: mongoose.Schema.Types.Mixed,
+        default: {}
+    }
     
 }, { timestamps: true });
+
+clientSchema.index({ document: 1 });
 
 const Client = mongoose.model('Client', clientSchema);
 
