@@ -9,6 +9,8 @@ import {
     deleteClientController
 } from '../controllers/client.controllers.js';
 
+import { authorizeGeneral } from '../middlewares/auth.middlewares.js'
+
 const clientRouter = Router();
 
 clientRouter.get('/', getClientsController);
