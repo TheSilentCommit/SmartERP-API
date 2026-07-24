@@ -52,7 +52,7 @@ export const createSuppliersService = async (operations, userId) => {
 
     if(duplicatedDocuments.length > 0){
         return {code: 400, message: 'Duplicate documents found in the request', success: false, 
-            data: [...new Set(duplicatedSupplier)]
+            data: [...new Set(duplicatedDocuments)]
         };
     }
 

@@ -44,10 +44,11 @@ export const createClientsController = async (req, res, next) => {
 
 export const updateClientController = async (req, res, next) => {
     try {
-        const { operation } = req.body;
+        const data = req.body;
+        const { id } = req.params;
         const userId = req.user.id;
 
-        const result = await updateClientService(operation, userId);
+        const result = await updateClientService(data, id, userId);
 
         return sendMessage(res, result.code, result.message, result.success, result.data);
     } catch (error) {
