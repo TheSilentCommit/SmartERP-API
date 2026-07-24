@@ -91,6 +91,11 @@ const clientSchema = new mongoose.Schema({
         default: null
     },
 
+    active: {
+        type: Boolean,
+        default: true
+    },
+
     metadata: {
         type: mongoose.Schema.Types.Mixed,
         default: {}
@@ -98,7 +103,8 @@ const clientSchema = new mongoose.Schema({
     
 }, { timestamps: true });
 
-clientSchema.index({ document: 1 });
+clientSchema.index({ name: 1 });
+clientSchema.index({ active: 1 });
 
 const Client = mongoose.model('Client', clientSchema);
 
